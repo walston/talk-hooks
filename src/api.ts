@@ -14,10 +14,6 @@ export default function getAllUsers(): Promise<any> {
 export function getUser(id: string): Promise<any> {
   return fetch(API + `?results=1&seed=${id}&${OPTIONS}`)
     .then(response => response.json())
-    .then(response => {
-      console.debug(response);
-      return response;
-    })
     .then(({ results }) => makeUserObject(results[0]));
 }
 
@@ -26,7 +22,7 @@ async function makeUserObject(obj: unknown): Promise<UserObject> {
   return {
     id: u.login.sha1.slice(0, 9),
     name: make_title_case(`${u.name.first} ${u.name.last}`),
-    picture: u.picture.thumbnail,
+    picture: u.picture.large,
     email: u.email,
     dob: new Date(u.dob.date).toLocaleDateString(),
     address: make_title_case(

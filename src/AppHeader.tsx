@@ -54,7 +54,10 @@ class AppHeader extends React.Component<Props> {
         <input
           type="button"
           value="Sign In"
-          onClick={() => signIn(username, password)}
+          onClick={() => {
+            signIn(username, password);
+            this.setState({ username: "", password: "" });
+          }}
         />
       </>
     );

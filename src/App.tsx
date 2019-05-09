@@ -3,6 +3,7 @@ import "./App.css";
 import { Provider } from "./store";
 
 import { AppHeader } from "./AppHeader";
+import { AppBody } from "./AppBody";
 
 const App: React.FC = () => {
   return (
@@ -11,6 +12,9 @@ const App: React.FC = () => {
         <header className="App-header">
           <AppHeader />
         </header>
+        <main className="App-body">
+          <AppBody />
+        </main>
       </div>
     </Provider>
   );
