@@ -1,23 +1,48 @@
-import { ApiUserObject } from "./types";
+import { ThunkAction } from "redux-thunk";
+import { UserObject } from "./types";
+import { getUser } from "../api";
+import { State } from "./types";
+
+type Thunk = ThunkAction<any, State, null, any>;
 
 export const UPDATE_USER: "UPDATE_USER" = "UPDATE_USER";
-export const updateUser = (user: ApiUserObject) => ({
+export const updateUser = (user: UserObject) => ({
   type: UPDATE_USER,
   payload: { ...user }
 });
 
-export const LOG_IN: "LOG_IN" = "LOG_IN";
-export const login = (user: ApiUserObject) => ({
-  type: LOG_IN,
+export const SIGN_IN: "SIGN_IN" = "SIGN_IN";
+export const signIn = (user: UserObject) => ({
+  type: SIGN_IN,
   payload: { ...user }
 });
 
-export const LOG_OUT: "LOG_OUT" = "LOG_OUT";
-export const logout = () => ({
-  type: LOG_OUT
+export const SIGN_OUT: "SIGN_OUT" = "SIGN_OUT";
+export const signOut = () => ({
+  type: SIGN_OUT
 });
 
-export const LOGGING_IN: "LOGGING_IN" = "LOGGING_IN";
-export const loggingIn = () => ({
-  type: LOGGING_IN
+export const SIGNING_IN: "SIGNING_IN" = "SIGNING_IN";
+export const signingIn = () => ({
+  type: SIGNING_IN
 });
+
+export const logIn$ = ({ username = "", password = "" }): Thunk => {
+  return dispatch => {
+    dispatch(signingIn());
+    getUser(username + password)
+      .then(user => {
+        dispatch(signIn(user));
+      })
+      .catch(error => {
+        dispatch(signOut());
+        console.error(error);
+      });
+  };
+};
+
+export const logOut$ = (): Thunk => {
+  return dispatch => {
+    dispatch(signOut());
+  };
+};

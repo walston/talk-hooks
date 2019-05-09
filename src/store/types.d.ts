@@ -1,3 +1,8 @@
+export interface State {
+  loading: boolean;
+  user: null | UserObject;
+}
+
 export interface ApiUserObject {
   login: {
     uuid: string;
