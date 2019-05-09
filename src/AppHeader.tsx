@@ -12,55 +12,50 @@ type DispatchProps = {
 };
 type Props = StateProps & DispatchProps;
 
-class AppHeader extends React.Component<Props> {
-  state = { username: "", password: "" };
+function AppHeader(props: Props) {
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
 
-  handleUsernameChange = (event: InputEvent) => {
-    this.setState({ username: event.currentTarget.value });
+  const handleUsernameChange = (event: InputEvent) => {
+    setUsername(event.currentTarget.value);
   };
 
-  handlePasswordChange = (event: InputEvent) => {
-    this.setState({ password: event.currentTarget.value });
+  const handlePasswordChange = (event: InputEvent) => {
+    setPassword(event.currentTarget.value);
   };
 
-  render() {
-    const { signIn, signOut, user_name } = this.props;
-    const { username, password } = this.state;
+  const { signIn, signOut, user_name } = props;
 
-    return user_name ? (
-      <>
-        <div>{user_name}</div>
-        <input type="button" value="Sign Out" onClick={() => signOut()} />
-      </>
-    ) : (
-      <>
-        <label>
-          username:&nbsp;
-          <input
-            type="text"
-            value={this.state.username}
-            onChange={this.handleUsernameChange}
-          />
-        </label>
-        <label>
-          password:&nbsp;
-          <input
-            type="password"
-            value={this.state.password}
-            onChange={this.handlePasswordChange}
-          />
-        </label>
+  return user_name ? (
+    <>
+      <div>{user_name}</div>
+      <input type="button" value="Sign Out" onClick={() => signOut()} />
+    </>
+  ) : (
+    <>
+      <label>
+        username:&nbsp;
+        <input type="text" value={username} onChange={handleUsernameChange} />
+      </label>
+      <label>
+        password:&nbsp;
         <input
-          type="button"
-          value="Sign In"
-          onClick={() => {
-            signIn(username, password);
-            this.setState({ username: "", password: "" });
-          }}
+          type="password"
+          value={password}
+          onChange={handlePasswordChange}
         />
-      </>
-    );
-  }
+      </label>
+      <input
+        type="button"
+        value="Sign In"
+        onClick={() => {
+          signIn(username, password);
+          setUsername("");
+          setPassword("");
+        }}
+      />
+    </>
+  );
 }
 
 const ConnectedAppHeader = () => {
@@ -75,6 +70,7 @@ const ConnectedAppHeader = () => {
   const signIn = (username: string, password: string) =>
     actions.logIn$({ username, password });
   const signOut = () => actions.logOut$();
+
   return (
     <AppHeader
       signIn={signIn}
