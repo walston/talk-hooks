@@ -1,7 +1,7 @@
-import React from "react";
-import { connect } from "react-redux";
+import React, { useContext } from "react";
 
-import { State, UserObject } from "./store/types";
+import { UserObject } from "./store/types";
+import { Context } from "./store";
 
 type StateProps = { user: null | UserObject };
 type Props = StateProps;
@@ -24,8 +24,10 @@ class AppBody extends React.Component<Props> {
   }
 }
 
-const ConnectedAppBody = connect((state: State) => ({
-  user: state.user
-}))(AppBody);
+const ConnectedAppBody = () => {
+  const store = useContext(Context);
+  const state = store.getState();
+  return <AppBody user={state.user} />;
+};
 
 export { ConnectedAppBody as AppBody };

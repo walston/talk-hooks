@@ -1,12 +1,12 @@
-import React, { ChangeEvent } from "react";
-import { connect } from "react-redux";
+import React, { ChangeEvent, useContext } from "react";
+import { Context } from "./store";
 
 import { State } from "./store/types";
 import * as actions from "./store/actions";
 
 type InputEvent = ChangeEvent<HTMLInputElement>;
 
-type StateProps = { user_name: null | string };
+type StateProps = { loading: boolean; user_name: string };
 type DispatchProps = {
   signIn: (username: string, password: string) => void;
   signOut: () => void;
@@ -64,19 +64,20 @@ class AppHeader extends React.Component<Props> {
   }
 }
 
-const ConnectedAppHeader = connect(
-  (state: State) => ({
-    loading: state.loading,
-    user_name: state.user ? state.user.name : null
-  }),
-  (dispatch: any) => ({
-    signIn: (username: string, password: string) => {
-      dispatch(actions.logIn$({ username, password }));
-    },
-    signOut: () => {
-      dispatch(actions.logOut$());
-    }
-  })
-)(AppHeader);
+const ConnectedAppHeader = () => {
+  const store = useContext(Context);
+  const state: State = store.getState();
+  const signIn = (username: string, password: string) =>
+    actions.logIn$({ username, password });
+  const signOut = () => actions.logOut$();
+  return (
+    <AppHeader
+      signIn={signIn}
+      signOut={signOut}
+      loading={state.loading}
+      user_name={state.user ? state.user.name : ""}
+    />
+  );
+};
 
 export { ConnectedAppHeader as AppHeader };

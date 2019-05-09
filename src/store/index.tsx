@@ -1,22 +1,20 @@
 import React from "react";
 import { createStore, applyMiddleware } from "redux";
-import { Provider as ReduxProvider } from "react-redux";
-import thunk from "redux-thunk";
 
 import reducer from "./reducer";
 
 const store = createStore(
   reducer,
-  applyMiddleware(thunk, () => {
+  applyMiddleware(() => {
     return next => action => {
       console.debug("dispatching", action);
       return next(action);
     };
   })
 );
-const context = React.createContext(store);
+const Context = React.createContext(store);
 
-const Provider = (props: any) => <ReduxProvider {...props} store={store} />;
-const Consumer = context.Consumer;
+const Provider = (props: any) => <Context.Provider {...props} value={store} />;
+const Consumer = Context.Consumer;
 
-export { Provider, Consumer, store };
+export { Context, Consumer, Provider, store };

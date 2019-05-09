@@ -1,9 +1,6 @@
-import { ThunkAction } from "redux-thunk";
 import { UserObject } from "./types";
 import { getUser } from "../api";
-import { State } from "./types";
-
-type Thunk = ThunkAction<any, State, null, any>;
+import { store } from "./index";
 
 export const UPDATE_USER: "UPDATE_USER" = "UPDATE_USER";
 export const updateUser = (user: UserObject) => ({
@@ -27,22 +24,20 @@ export const signingIn = () => ({
   type: SIGNING_IN
 });
 
-export const logIn$ = ({ username = "", password = "" }): Thunk => {
-  return dispatch => {
-    dispatch(signingIn());
-    getUser(username + password)
-      .then(user => {
-        dispatch(signIn(user));
-      })
-      .catch(error => {
-        dispatch(signOut());
-        console.error(error);
-      });
-  };
+export const logIn$ = ({ username = "", password = "" }) => {
+  const dispatch = store.dispatch;
+  dispatch(signingIn());
+  getUser(username + password)
+    .then(user => {
+      dispatch(signIn(user));
+    })
+    .catch(error => {
+      dispatch(signOut());
+      console.error(error);
+    });
 };
 
-export const logOut$ = (): Thunk => {
-  return dispatch => {
-    dispatch(signOut());
-  };
+export const logOut$ = () => {
+  const dispatch = store.dispatch;
+  dispatch(signOut());
 };
