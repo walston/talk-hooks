@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useState, useEffect } from "react";
 
 import { UserObject } from "./store/types";
 import { Context } from "./store";
@@ -26,7 +26,12 @@ class AppBody extends React.Component<Props> {
 
 const ConnectedAppBody = () => {
   const store = useContext(Context);
-  const state = store.getState();
+  const [state, setState] = useState(store.getState());
+  useEffect(() => {
+    return store.subscribe(() => {
+      setState(store.getState());
+    });
+  }, [store, setState]);
   return <AppBody user={state.user} />;
 };
 

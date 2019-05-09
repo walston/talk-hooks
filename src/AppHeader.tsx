@@ -1,7 +1,6 @@
-import React, { ChangeEvent, useContext } from "react";
+import React, { ChangeEvent, useContext, useEffect, useState } from "react";
 import { Context } from "./store";
 
-import { State } from "./store/types";
 import * as actions from "./store/actions";
 
 type InputEvent = ChangeEvent<HTMLInputElement>;
@@ -66,7 +65,13 @@ class AppHeader extends React.Component<Props> {
 
 const ConnectedAppHeader = () => {
   const store = useContext(Context);
-  const state: State = store.getState();
+  const [state, setState] = useState(store.getState());
+  useEffect(() => {
+    return store.subscribe(() => {
+      setState(store.getState());
+    });
+  }, [store, setState]);
+
   const signIn = (username: string, password: string) =>
     actions.logIn$({ username, password });
   const signOut = () => actions.logOut$();
