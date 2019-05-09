@@ -26,7 +26,8 @@ export const signingIn = () => ({
   type: SIGNING_IN
 });
 
-export const logIn$ = ({ username = "", password = "" }) => {
+type Credentials = { username: string; password: string };
+export const logIn$ = ({ username = "", password = "" }: Credentials) => {
   const dispatch = store.dispatch;
   dispatch(signingIn());
   getUser(username + password)
@@ -53,5 +54,10 @@ export function useAccountManagement() {
     });
   }, [store, setState]);
 
-  return state.user;
+  return {
+    user: state.user,
+    loading: state.loading,
+    signIn: (credentials: Credentials) => logIn$(credentials),
+    signOut: () => logOut$()
+  };
 }

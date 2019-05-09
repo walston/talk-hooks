@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect } from "react";
+import React from "react";
 
 import { UserObject } from "./store/types";
 import { useAccountManagement } from "./store/actions";
@@ -23,7 +23,7 @@ function AppBody(props: Props) {
 }
 
 const ConnectedAppBody = () => {
-  const user = useAccountManagement();
+  const { user } = useAccountManagement();
   return <AppBody user={user} />;
 };
 

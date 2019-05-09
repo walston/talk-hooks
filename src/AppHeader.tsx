@@ -1,13 +1,12 @@
-import React, { ChangeEvent, useContext, useEffect, useState } from "react";
-import { Context } from "./store";
+import React, { ChangeEvent, useState } from "react";
 
-import * as actions from "./store/actions";
+import { useAccountManagement } from "./store/actions";
 
 type InputEvent = ChangeEvent<HTMLInputElement>;
 
 type StateProps = { loading: boolean; user_name: string };
 type DispatchProps = {
-  signIn: (username: string, password: string) => void;
+  signIn: (creds: { username: string; password: string }) => void;
   signOut: () => void;
 };
 type Props = StateProps & DispatchProps;
@@ -49,7 +48,7 @@ function AppHeader(props: Props) {
         type="button"
         value="Sign In"
         onClick={() => {
-          signIn(username, password);
+          signIn({ username, password });
           setUsername("");
           setPassword("");
         }}
@@ -59,24 +58,14 @@ function AppHeader(props: Props) {
 }
 
 const ConnectedAppHeader = () => {
-  const store = useContext(Context);
-  const [state, setState] = useState(store.getState());
-  useEffect(() => {
-    return store.subscribe(() => {
-      setState(store.getState());
-    });
-  }, [store, setState]);
-
-  const signIn = (username: string, password: string) =>
-    actions.logIn$({ username, password });
-  const signOut = () => actions.logOut$();
+  const { user, loading, signIn, signOut } = useAccountManagement();
 
   return (
     <AppHeader
       signIn={signIn}
       signOut={signOut}
-      loading={state.loading}
-      user_name={state.user ? state.user.name : ""}
+      loading={loading}
+      user_name={user ? user.name : ""}
     />
   );
 };
