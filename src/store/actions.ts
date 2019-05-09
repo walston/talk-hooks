@@ -1,6 +1,8 @@
+import { useState, useContext, useEffect } from "react";
+
 import { UserObject } from "./types";
 import { getUser } from "../api";
-import { store } from "./index";
+import { Context, store } from "./index";
 
 export const UPDATE_USER: "UPDATE_USER" = "UPDATE_USER";
 export const updateUser = (user: UserObject) => ({
@@ -41,3 +43,15 @@ export const logOut$ = () => {
   const dispatch = store.dispatch;
   dispatch(signOut());
 };
+
+export function useAccountManagement() {
+  const store = useContext(Context);
+  const [state, setState] = useState(store.getState());
+  useEffect(() => {
+    return store.subscribe(() => {
+      setState(store.getState());
+    });
+  }, [store, setState]);
+
+  return state.user;
+}

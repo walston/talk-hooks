@@ -1,7 +1,7 @@
 import React, { useContext, useState, useEffect } from "react";
 
 import { UserObject } from "./store/types";
-import { Context } from "./store";
+import { useAccountManagement } from "./store/actions";
 
 type StateProps = { user: null | UserObject };
 type Props = StateProps;
@@ -23,14 +23,8 @@ function AppBody(props: Props) {
 }
 
 const ConnectedAppBody = () => {
-  const store = useContext(Context);
-  const [state, setState] = useState(store.getState());
-  useEffect(() => {
-    return store.subscribe(() => {
-      setState(store.getState());
-    });
-  }, [store, setState]);
-  return <AppBody user={state.user} />;
+  const user = useAccountManagement();
+  return <AppBody user={user} />;
 };
 
 export { ConnectedAppBody as AppBody };
